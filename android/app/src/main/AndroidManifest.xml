@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.kroniker_flutter">
+    package="com.tomcohen.kroniker">
    <application
         android:label="kroniker_flutter"
         android:name="${applicationName}"

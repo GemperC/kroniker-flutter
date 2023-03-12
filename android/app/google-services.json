@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "870407949120",
+    "project_id": "kroniker-f2a97",
+    "storage_bucket": "kroniker-f2a97.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:870407949120:android:6a4e513717c354115b08a5",
+        "android_client_info": {
+          "package_name": "com.tomcohen.kroniker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "870407949120-velgiq9rdoj2osnkdui6l4jpjnhtjf8o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tomcohen.kroniker",
+            "certificate_hash": "bb5687f5966a9f7132afd5a2d3eccd9d705aac84"
+          }
+        },
+        {
+          "client_id": "870407949120-d5g1g7rvk5u6842i157mmbaqmjb2aanr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDoPBEM_dISwz1h2sZGp7Iu511Xj8x_EV4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "870407949120-d5g1g7rvk5u6842i157mmbaqmjb2aanr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

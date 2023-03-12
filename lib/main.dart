@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:kroniker_flutter/config/theme.dart';
 import 'package:kroniker_flutter/config/theme_model.dart';
 import 'package:provider/provider.dart';
 import 'index.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await Firebase.initializeApp();
   await ThemeModel().loadTheme();
 
   runApp(
     ChangeNotifierProvider(
       create: (context) => ThemeModel(),
-      child: MyApp(),
+      child: const MyApp(),
     ),
   );
 }

@@ -8,14 +8,20 @@ class ThemeModel extends ChangeNotifier {
   ThemeData _currentTheme = appThemeData;
   ThemeData get currentTheme => _currentTheme;
 
+  ThemeModel() {
+    loadTheme();
+  }
+
   Future<void> toggleTheme() async {
     _currentTheme =
         _currentTheme == appThemeData ? darkAppThemeData : appThemeData;
+    print('New theme: $_currentTheme');
     notifyListeners();
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString(
         _themeKey, _currentTheme == appThemeData ? 'light' : 'dark');
+    print('Theme saved: ${_currentTheme == appThemeData ? 'light' : 'dark'}');
   }
 
   Future<void> loadTheme() async {

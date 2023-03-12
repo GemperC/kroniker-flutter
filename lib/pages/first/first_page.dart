@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kroniker_flutter/config/theme_model.dart';
+import 'package:kroniker_flutter/pages/home/home_page.dart';
 import 'package:provider/provider.dart';
 
 class FirstPage extends StatefulWidget {
@@ -32,6 +33,16 @@ class _FirstPageState extends State<FirstPage> {
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
+            ),
+            FloatingActionButton(
+              onPressed: () {
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HomePage()),
+                    (Route<dynamic> route) => false);
+              },
+              tooltip: 'Increment',
+              child: const Icon(Icons.add),
             ),
           ],
         ),

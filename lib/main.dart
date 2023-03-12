@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kroniker_flutter/config/theme.dart';
-import 'package:kroniker_flutter/config/theme_sp.dart';
+import 'package:kroniker_flutter/config/theme_model.dart';
 import 'package:provider/provider.dart';
 
 void main() async {

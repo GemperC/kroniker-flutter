@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 
 final List<String> imgList = [
   'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
@@ -20,6 +21,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  var _tabSelectedIndexSelected = 0;
+  var _tabTextIconIndexSelected = 0;
   final List<Widget> imageSliders = imgList
       .map((item) => Container(
             child: Container(
@@ -78,6 +81,22 @@ class _HomePageState extends State<HomePage> {
               enlargeFactor: 0.4,
             ),
             items: imageSliders,
+          ),
+          Text("News"),
+          FlutterToggleTab(
+            width: 50,
+            borderRadius: 15,
+            selectedTextStyle: TextStyle(
+                color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),
+            unSelectedTextStyle: TextStyle(
+                color: Colors.blue, fontSize: 14, fontWeight: FontWeight.w400),
+            labels: ["Games", "Charecters"],
+            selectedIndex: _tabTextIconIndexSelected,
+            selectedLabelIndex: (index) {
+              setState(() {
+                _tabTextIconIndexSelected = index;
+              });
+            },
           ),
         ],
       ),

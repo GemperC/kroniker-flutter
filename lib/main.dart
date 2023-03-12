@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Kroniker',
       theme: Provider.of<ThemeModel>(context).currentTheme,
-      home: const FirstPage(title: 'Flutter Demo Home Page'),
+      home: const WelcomePage(),
     );
   }
 }

@@ -1,1 +1,1 @@
-export 'pages/welcome/welcome_page.dart' show WelcomePage;
+export 'pages/first/first_page.dart' show FirstPage;

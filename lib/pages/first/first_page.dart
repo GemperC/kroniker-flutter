@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:kroniker_flutter/config/theme_model.dart';
 import 'package:provider/provider.dart';
 
-class WelcomePage extends StatefulWidget {
-  const WelcomePage({super.key});
+class FirstPage extends StatefulWidget {
+  const FirstPage({super.key});
 
   @override
-  State<WelcomePage> createState() => _WelcomePageState();
+  State<FirstPage> createState() => _FirstPageState();
 }
 
-class _WelcomePageState extends State<WelcomePage> {
+class _FirstPageState extends State<FirstPage> {
   int _counter = 0;
 
   void _incrementCounter() {

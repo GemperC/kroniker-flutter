@@ -14,6 +14,7 @@ import 'package:kroniker_flutter/auth/google_auth.dart';
 import 'package:kroniker_flutter/backend/backend.dart';
 import 'package:kroniker_flutter/backend/records/character_record.dart';
 import 'package:kroniker_flutter/backend/records/game_record.dart';
+import 'package:kroniker_flutter/pages/game_menu/game_menu_page.dart';
 import 'package:provider/provider.dart';
 import 'package:star_menu/star_menu.dart';
 import 'package:circular_menu/circular_menu.dart';
@@ -231,7 +232,16 @@ class _HomePageState extends State<HomePage> {
                                                       const EdgeInsets.only(
                                                           right: 2.0),
                                                   child: InkWell(
-                                                    onTap: () {},
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  GameMenuPage(
+                                                                      gameData:
+                                                                          myGames[
+                                                                              index])));
+                                                    },
                                                     child: Container(
                                                       height: 30,
                                                       width: 80,
@@ -246,7 +256,7 @@ class _HomePageState extends State<HomePage> {
                                                               .primaryColor),
                                                       child: Center(
                                                           child: Text(
-                                                        "Play",
+                                                        "Go to",
                                                         style: Theme.of(context)
                                                             .textTheme
                                                             .bodySmall,

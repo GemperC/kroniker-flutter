@@ -7,23 +7,32 @@ final ThemeData appThemeData = ThemeData(
     scaffoldBackgroundColor: Colors.white,
     textTheme: TextTheme(
       headlineSmall:
-          const TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
-      bodyLarge: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-      bodyMedium: GoogleFonts.roboto(fontSize: 16.0),
-      bodySmall: const TextStyle(fontSize: 14.0),
+          GoogleFonts.poppins(fontSize: 24.0, fontWeight: FontWeight.bold),
+      bodyLarge:
+          GoogleFonts.poppins(fontSize: 18.0, fontWeight: FontWeight.bold),
+      bodyMedium: GoogleFonts.poppins(fontSize: 16.0),
+      bodySmall: GoogleFonts.poppins(fontSize: 14.0),
+      titleLarge: GoogleFonts.poppins(fontSize: 32.0),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ElevatedButton.styleFrom(),
+      style: ElevatedButton.styleFrom(backgroundColor: Colors.amber),
     ));
 
 final ThemeData darkAppThemeData = ThemeData(
   brightness: Brightness.dark,
   primaryColor: Colors.blue,
-  scaffoldBackgroundColor: Colors.black,
-  textTheme: const TextTheme(
-    headlineSmall: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
-    bodyLarge: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-    bodyMedium: TextStyle(fontSize: 16.0),
-    bodySmall: TextStyle(fontSize: 14.0),
+  scaffoldBackgroundColor: Color.fromARGB(255, 13, 13, 13),
+  textTheme: TextTheme(
+    headlineSmall:
+        GoogleFonts.poppins(fontSize: 24.0, fontWeight: FontWeight.bold),
+    bodyLarge: GoogleFonts.poppins(fontSize: 18.0, fontWeight: FontWeight.bold),
+    bodyMedium: GoogleFonts.poppins(fontSize: 16.0),
+    bodySmall: GoogleFonts.poppins(fontSize: 14.0),
+    titleLarge: GoogleFonts.poppins(
+        fontSize: 58.0, color: Colors.white, fontWeight: FontWeight.w700),
+  ),
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ElevatedButton.styleFrom(
+        backgroundColor: Color.fromARGB(255, 35, 64, 150)),
   ),
 );

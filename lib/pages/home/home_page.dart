@@ -1,8 +1,11 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
+import 'package:kroniker_flutter/auth/google_auth.dart';
+import 'package:provider/provider.dart';
 
 final List<String> imgList = [
   'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
@@ -21,14 +24,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final user = FirebaseAuth.instance.currentUser!;
   var _tabSelectedIndexSelected = 0;
   var _tabTextIconIndexSelected = 0;
   final List<Widget> imageSliders = imgList
       .map((item) => Container(
             child: Container(
-              margin: EdgeInsets.all(5.0),
+              margin: const EdgeInsets.all(5.0),
               child: ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                  borderRadius: const BorderRadius.all(Radius.circular(5.0)),
                   child: Stack(
                     children: <Widget>[
                       Image.network(item, fit: BoxFit.cover, width: 1000.0),
@@ -37,7 +41,7 @@ class _HomePageState extends State<HomePage> {
                         left: 0.0,
                         right: 0.0,
                         child: Container(
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             gradient: LinearGradient(
                               colors: [
                                 Color.fromARGB(200, 0, 0, 0),
@@ -47,11 +51,11 @@ class _HomePageState extends State<HomePage> {
                               end: Alignment.topCenter,
                             ),
                           ),
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                               vertical: 10.0, horizontal: 20.0),
                           child: Text(
                             'No. ${imgList.indexOf(item)} image',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 20.0,
                               fontWeight: FontWeight.bold,
@@ -71,8 +75,8 @@ class _HomePageState extends State<HomePage> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           // Add your widgets here
-          Text("Welcome user"),
-          Text("Upcomeming Games"),
+          const Text("Welcome user"),
+          const Text("Upcomeming Games"),
           CarouselSlider(
             options: CarouselOptions(
               aspectRatio: 2.0,
@@ -82,13 +86,13 @@ class _HomePageState extends State<HomePage> {
             ),
             items: imageSliders,
           ),
-          Text("News"),
+          const Text("News"),
           FlutterToggleTab(
             width: 50,
             borderRadius: 15,
-            selectedTextStyle: TextStyle(
+            selectedTextStyle: const TextStyle(
                 color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),
-            unSelectedTextStyle: TextStyle(
+            unSelectedTextStyle: const TextStyle(
                 color: Colors.blue, fontSize: 14, fontWeight: FontWeight.w400),
             labels: ["Games", "Charecters"],
             selectedIndex: _tabTextIconIndexSelected,
@@ -98,6 +102,7 @@ class _HomePageState extends State<HomePage> {
               });
             },
           ),
+          Text(user.displayName!)
         ],
       ),
       bottomSheet: GestureDetector(
@@ -114,7 +119,16 @@ class _HomePageState extends State<HomePage> {
                   height: 200.0,
                   color: Colors.white,
                   child: Center(
-                    child: Text('Bottom Sheet'),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        final provider = Provider.of<GoogleSignInProvider>(
+                            context,
+                            listen: false);
+                        provider.logout();
+                        Navigator.pop(context);
+                      },
+                      child: const Text("LogOUt"),
+                    ),
                   ),
                 );
               },
@@ -124,7 +138,7 @@ class _HomePageState extends State<HomePage> {
         child: Container(
           height: 50.0,
           color: Colors.grey,
-          child: Center(
+          child: const Center(
             child: Text('Swipe up for more'),
           ),
         ),

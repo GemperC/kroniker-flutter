@@ -4,7 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:kroniker_flutter/config/theme.dart';
+import 'package:kroniker_flutter/auth/google_auth.dart';
 import 'package:kroniker_flutter/config/theme_model.dart';
 import 'package:kroniker_flutter/pages/home/home_page.dart';
 import 'package:provider/provider.dart';
@@ -55,9 +55,15 @@ class _FirstPageState extends State<FirstPage> {
       child: Scaffold(
         body: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              const Text("Kroniker"),
+              Padding(
+                padding: const EdgeInsets.only(top: 60),
+                child: Text(
+                  "Kroniker",
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+              ),
               CarouselSlider(
                 options: CarouselOptions(
                   viewportFraction: 1,
@@ -71,6 +77,7 @@ class _FirstPageState extends State<FirstPage> {
                 ),
                 items: gifsWidgetList(imagePaths),
               ),
+
               // FloatingActionButton(
               //   onPressed: () {
               //     Navigator.pushAndRemoveUntil(
@@ -81,37 +88,36 @@ class _FirstPageState extends State<FirstPage> {
               //   tooltip: 'Increment',
               //   child: const Icon(Icons.add),
               // ),
-              OutlinedButton(
-                onPressed: () {
-                  // Add your onPressed logic here
-                },
-                child: Container(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(FontAwesomeIcons.google),
-                      SizedBox(
-                        width: 50,
-                      ),
-                      Text('Sign in with Google'),
-                    ],
-                  ),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  // Add your onPressed logic here
-                },
-                child: Container(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(FontAwesomeIcons.google),
-                      SizedBox(
-                        width: 50,
-                      ),
-                      Text('Sign in with Google'),
-                    ],
+              Expanded(child: Container()),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 70),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    final provider = Provider.of<GoogleSignInProvider>(context,
+                        listen: false);
+                    provider.googleLogin();
+                  },
+                  child: Container(
+                    height: 58,
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(FontAwesomeIcons.google),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Text(
+                          'Sign in with Google',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(
+                                  fontSize: 18, fontWeight: FontWeight.w600),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

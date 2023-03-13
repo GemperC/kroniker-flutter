@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kroniker_flutter/auth/google_auth.dart';
 import 'package:kroniker_flutter/config/theme_model.dart';
 import 'package:provider/provider.dart';
 import 'index.dart';
@@ -23,11 +24,14 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Kroniker',
-      theme: Provider.of<ThemeModel>(context).currentTheme,
-      home: const FirstPage(),
+    return ChangeNotifierProvider(
+      create: (context) => GoogleSignInProvider(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Kroniker',
+        theme: Provider.of<ThemeModel>(context).currentTheme,
+        home: const AuthNav(),
+      ),
     );
   }
 }

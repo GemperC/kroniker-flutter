@@ -89,7 +89,7 @@ class _NewGamePageState extends State<NewGamePage> {
 
         ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Game record created!')));
-        Navigator.of(context).pop();
+        Navigator.pop(context, data);
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Failed to create game record')));

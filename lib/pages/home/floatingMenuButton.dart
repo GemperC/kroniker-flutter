@@ -138,10 +138,13 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton>
             visible: true,
             onTap: () {
               Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => NewGamePage(),
-                  ));
+                context,
+                MaterialPageRoute(
+                  builder: (context) => NewGamePage(),
+                ),
+              ).then((data) {
+                // Update state using the data that was passed back
+              });
             }),
         SpeedDialChild(
             child: !rmicons ? const Icon(FontAwesomeIcons.plus) : null,

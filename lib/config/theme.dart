@@ -25,6 +25,9 @@ final ThemeData appThemeData = ThemeData(
 final ThemeData darkAppThemeData = ThemeData(
   brightness: Brightness.dark,
   indicatorColor: Colors.white,
+  floatingActionButtonTheme: FloatingActionButtonThemeData(
+      backgroundColor: Color.fromARGB(255, 35, 64, 150),
+      foregroundColor: Colors.white),
   primaryColor: Color.fromARGB(255, 35, 64, 150),
   disabledColor: Color.fromARGB(255, 0, 0, 0),
   scaffoldBackgroundColor: Color.fromARGB(255, 13, 13, 13),

@@ -6,8 +6,14 @@ class UserRecord {
   final String name;
   final String email;
   final String uid;
+  final List<dynamic>? myGames;
 
-  UserRecord({required this.name, required this.email, required this.uid});
+  UserRecord({
+    required this.name,
+    required this.email,
+    required this.uid,
+    this.myGames,
+  });
 
   // Convert Firestore document to UserRecord object
   factory UserRecord.fromDocument(DocumentSnapshot doc) {
@@ -16,13 +22,15 @@ class UserRecord {
       name: data['name'],
       email: data['email'],
       uid: data['uid'],
+      myGames: data['myGames'],
     );
   }
 }
 
 class UserRecordService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
-  final CollectionReference _usersRef = FirebaseFirestore.instance.collection('users');
+  final CollectionReference _usersRef =
+      FirebaseFirestore.instance.collection('users');
 
   // Function to get user data as a Future
   Future<UserRecord> getUserData(String uid) async {
@@ -43,6 +51,7 @@ class UserRecordService {
       'name': user.name,
       'email': user.email,
       'uid': user.uid,
+      'myGames': user.myGames,
     });
   }
 

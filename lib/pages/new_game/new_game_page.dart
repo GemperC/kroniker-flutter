@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:kroniker_flutter/backend/records/game_record.dart';
+import 'package:kroniker_flutter/index.dart';
 import 'package:kroniker_flutter/utils/page_model.dart';
 import './new_game_model.dart';
 import 'dart:io';
@@ -89,7 +90,12 @@ class _NewGamePageState extends State<NewGamePage> {
 
         ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Game record created!')));
-        Navigator.pop(context, data);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomePage(),
+          ),
+        );
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Failed to create game record')));

@@ -12,21 +12,14 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kroniker_flutter/auth/google_auth.dart';
 import 'package:kroniker_flutter/backend/backend.dart';
+import 'package:kroniker_flutter/backend/records/character_record.dart';
+import 'package:kroniker_flutter/backend/records/game_record.dart';
 import 'package:provider/provider.dart';
 import 'package:star_menu/star_menu.dart';
 import 'package:circular_menu/circular_menu.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import 'floatingMenuButton.dart';
-
-final List<String> imgList = [
-  'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
-  'https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80',
-  'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
-  'https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=89719a0d55dd05e2deae4120227e6efc&auto=format&fit=crop&w=1953&q=80',
-  'https://images.unsplash.com/photo-1508704019882-f9cf40e475b4?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=8c6e5e3aba713b17aa1fe71ab4f0ae5b&auto=format&fit=crop&w=1352&q=80',
-  'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80'
-];
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -42,10 +35,15 @@ class _HomePageState extends State<HomePage> {
   FirebaseStorage storage = FirebaseStorage.instance;
   final user = FirebaseAuth.instance.currentUser!;
   final userRecordServices = UserRecordService();
+  final gameRecordServices = GameRecordService();
+
   var _tabTextIconIndexSelected = 0;
 
   late Map<String, dynamic> userDocData;
   late Map<String, dynamic> myGamesIdsImages;
+
+  List<String> gameIdList = [];
+
   List<String> imageBannersUrls = [];
 
   @override
@@ -64,21 +62,28 @@ class _HomePageState extends State<HomePage> {
       userDocData = document.data() as Map<String, dynamic>;
     });
     List<String> imageUrls = [];
+    List<String> _gameIdList = [];
 
     final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection('games')
         .where(FieldPath.documentId, whereIn: userDocData['myGames'])
         .get();
+
     for (var document in querySnapshot.docs) {
       Map<String, dynamic>? data = document.data() as Map<String, dynamic>?;
       if (data != null && data.containsKey('imageUrl')) {
         String imageUrl = data['imageUrl'];
         imageUrls.add(imageUrl);
       }
+      if (data != null && data.containsKey('id')) {
+        String gameId = data['id'];
+        gameIdList.add(gameId);
+      }
     }
 
     setState(() {
       imageBannersUrls = imageUrls;
+      gameIdList = _gameIdList;
     });
   }
 
@@ -137,7 +142,7 @@ class _HomePageState extends State<HomePage> {
                                           padding: const EdgeInsets.symmetric(
                                               vertical: 10.0, horizontal: 20.0),
                                           child: Text(
-                                            'No. ${imgList.indexOf(item)} image',
+                                            'image',
                                             style: const TextStyle(
                                               color: Colors.white,
                                               fontSize: 20.0,
@@ -176,39 +181,192 @@ class _HomePageState extends State<HomePage> {
                     selectedLabelIndex: (index) {
                       setState(() {
                         _tabTextIconIndexSelected = index;
+                        print(_tabTextIconIndexSelected);
                       });
                     },
                   ),
-                  Expanded(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: 10,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 12, horizontal: 20),
-                          child: Center(
-                            child: Container(
-                              decoration:
-                                  const BoxDecoration(color: Colors.blue),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Container(
-                                    height: 50,
-                                    width: 50,
-                                    decoration:
-                                        const BoxDecoration(color: Colors.red),
+                  _tabTextIconIndexSelected == 0
+                      ? StreamBuilder<List<GameRecord>>(
+                          stream: gameRecordServices
+                              .streamGamesForUser(userDocData),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.active) {
+                              if (snapshot.hasData) {
+                                final myGames = snapshot.data!;
+                                return Expanded(
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: myGames.length,
+                                    itemBuilder: (context, index) {
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 12, horizontal: 30),
+                                        child: Center(
+                                          child: Container(
+                                            decoration: const BoxDecoration(
+                                                color: Colors.transparent),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          12.0),
+                                                  child: Image.network(
+                                                    myGames[index].imageUrl!,
+                                                    height: 50.0,
+                                                    width: 50.0,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Text(
+                                                    "${myGames[index].title}\nSession: 5"),
+                                                Expanded(child: Container()),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 2.0),
+                                                  child: InkWell(
+                                                    onTap: () {},
+                                                    child: Container(
+                                                      height: 30,
+                                                      width: 80,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius
+                                                                      .circular(
+                                                                          8)),
+                                                          color: Theme.of(
+                                                                  context)
+                                                              .primaryColor),
+                                                      child: Center(
+                                                          child: Text(
+                                                        "Play",
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .bodySmall,
+                                                      )),
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
                                   ),
-                                  const Text("sadsad\nasdsad"),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
+                                );
+                              } else if (snapshot.hasError) {
+                                return Center(
+                                  child: Text("There is an Error!"),
+                                );
+                              } else {
+                                return Center(
+                                  child: Text("Nothing to show"),
+                                );
+                              }
+                            } else {
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                          })
+                      : StreamBuilder<List<CharacterRecord>>(
+                          stream: null,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.active) {
+                              if (snapshot.hasData) {
+                                final myGames = snapshot.data!;
+                                return Expanded(
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: myGames.length,
+                                    itemBuilder: (context, index) {
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 12, horizontal: 30),
+                                        child: Center(
+                                          child: Container(
+                                            decoration: const BoxDecoration(
+                                                color: Colors.transparent),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          12.0),
+                                                  child: Image.network(
+                                                    myGames[index].imageUrl!,
+                                                    height: 50.0,
+                                                    width: 50.0,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Text(
+                                                    "${myGames[index].name}\Game: 5"),
+                                                Expanded(child: Container()),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 2.0),
+                                                  child: InkWell(
+                                                    onTap: () {},
+                                                    child: Container(
+                                                      height: 30,
+                                                      width: 80,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius
+                                                                      .circular(
+                                                                          8)),
+                                                          color: Theme.of(
+                                                                  context)
+                                                              .primaryColor),
+                                                      child: Center(
+                                                          child: Text(
+                                                        "Play",
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .bodySmall,
+                                                      )),
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                );
+                              } else if (snapshot.hasError) {
+                                return Center(
+                                  child: Text("There is an Error!"),
+                                );
+                              } else {
+                                return Center(
+                                  child: Text("Nothing to show"),
+                                );
+                              }
+                            } else {
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                          }),
                 ],
               ),
             ],

@@ -1,96 +1,53 @@
-// import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-// import 'index.dart';
-// import 'serializers.dart';
-// import 'package:built_value/built_value.dart';
+// Model class for user data
+class UserRecord {
+  final String name;
+  final String email;
+  final String uid;
 
-// part 'users_record.g.dart';
+  UserRecord({required this.name, required this.email, required this.uid});
 
-// abstract class UsersRecord implements Built<UsersRecord, UsersRecordBuilder> {
-//   static Serializer<UsersRecord> get serializer => _$usersRecordSerializer;
+  // Convert Firestore document to UserRecord object
+  factory UserRecord.fromDocument(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    return UserRecord(
+      name: data['name'],
+      email: data['email'],
+      uid: data['uid'],
+    );
+  }
+}
 
-//   String? get email;
+class UserRecordService {
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final CollectionReference _usersRef = FirebaseFirestore.instance.collection('users');
 
-//   String? get uid;
+  // Function to get user data as a Future
+  Future<UserRecord> getUserData(String uid) async {
+    final doc = await _usersRef.doc(uid).get();
+    return UserRecord.fromDocument(doc);
+  }
 
-//   @BuiltValueField(wireName: 'created_time')
-//   DateTime? get createdTime;
+  // Function to get user data as a Stream
+  Stream<UserRecord> streamUserData(String uid) {
+    return _usersRef.doc(uid).snapshots().map(
+          (doc) => UserRecord.fromDocument(doc),
+        );
+  }
 
-//   @BuiltValueField(wireName: 'setup_complete')
-//   bool? get setupComplete;
+  // Function to create a new user document in Firestore
+  Future<void> createUserRecord(UserRecord user) async {
+    await _usersRef.doc(user.uid).set({
+      'name': user.name,
+      'email': user.email,
+      'uid': user.uid,
+    });
+  }
 
-//   DocumentReference? get sizes;
-
-//   DocumentReference? get profile;
-
-//   @BuiltValueField(wireName: 'phone_number')
-//   String? get phoneNumber;
-
-//   @BuiltValueField(wireName: 'photo_url')
-//   String? get photoUrl;
-
-//   @BuiltValueField(wireName: 'display_name')
-//   String? get displayName;
-
-//   @BuiltValueField(wireName: kDocumentReferenceField)
-//   DocumentReference? get ffRef;
-//   DocumentReference get reference => ffRef!;
-
-//   static void _initializeBuilder(UsersRecordBuilder builder) => builder
-//     ..email = ''
-//     ..uid = ''
-//     ..setupComplete = false
-//     ..phoneNumber = ''
-//     ..photoUrl = ''
-//     ..displayName = '';
-
-//   static CollectionReference get collection =>
-//       FirebaseFirestore.instance.collection('users');
-
-//   static Stream<UsersRecord> getDocument(DocumentReference ref) => ref
-//       .snapshots()
-//       .map((s) => serializers.deserializeWith(serializer, serializedData(s))!);
-
-//   static Future<UsersRecord> getDocumentOnce(DocumentReference ref) => ref
-//       .get()
-//       .then((s) => serializers.deserializeWith(serializer, serializedData(s))!);
-
-//   UsersRecord._();
-//   factory UsersRecord([void Function(UsersRecordBuilder) updates]) =
-//       _$UsersRecord;
-
-//   static UsersRecord getDocumentFromData(
-//           Map<String, dynamic> data, DocumentReference reference) =>
-//       serializers.deserializeWith(serializer,
-//           {...mapFromFirestore(data), kDocumentReferenceField: reference})!;
-// }
-
-// Map<String, dynamic> createUsersRecordData({
-//   String? email,
-//   String? uid,
-//   DateTime? createdTime,
-//   bool? setupComplete,
-//   DocumentReference? sizes,
-//   DocumentReference? profile,
-//   String? phoneNumber,
-//   String? photoUrl,
-//   String? displayName,
-// }) {
-//   final firestoreData = serializers.toFirestore(
-//     UsersRecord.serializer,
-//     UsersRecord(
-//       (u) => u
-//         ..email = email
-//         ..uid = uid
-//         ..createdTime = createdTime
-//         ..setupComplete = setupComplete
-//         ..sizes = sizes
-//         ..profile = profile
-//         ..phoneNumber = phoneNumber
-//         ..photoUrl = photoUrl
-//         ..displayName = displayName,
-//     ),
-//   );
-
-//   return firestoreData;
-// }
+  // Function to delete a user document from Firestore
+  Future<void> deleteUserRecord(String uid) async {
+    await _usersRef.doc(uid).delete();
+  }
+}

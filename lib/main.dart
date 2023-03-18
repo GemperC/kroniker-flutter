@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kroniker_flutter/auth/google_auth.dart';
 import 'package:kroniker_flutter/config/theme_model.dart';
+import 'package:kroniker_flutter/utils/utils.dart';
 import 'package:provider/provider.dart';
 import 'index.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -18,6 +19,8 @@ void main() async {
   );
 }
 
+final navigatorKey = GlobalKey<NavigatorState>();
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -27,6 +30,8 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => GoogleSignInProvider(),
       child: MaterialApp(
+        navigatorKey: navigatorKey,
+        scaffoldMessengerKey: Utils.messengerKey,
         debugShowCheckedModeBanner: false,
         title: 'Kroniker',
         theme: Provider.of<ThemeModel>(context).currentTheme,

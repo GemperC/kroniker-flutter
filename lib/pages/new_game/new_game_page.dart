@@ -8,6 +8,7 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:kroniker_flutter/backend/records/game_record.dart';
 import 'package:kroniker_flutter/index.dart';
 import 'package:kroniker_flutter/utils/page_model.dart';
+import 'package:kroniker_flutter/utils/utils.dart';
 import './new_game_model.dart';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -87,9 +88,8 @@ class _NewGamePageState extends State<NewGamePage> {
         userDoc.update({
           'myGames': FieldValue.arrayUnion([gameDoc.id])
         });
+        Utils.showSnackBarWithColor("Game record created!", Colors.blue);
 
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Game record created!')));
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(

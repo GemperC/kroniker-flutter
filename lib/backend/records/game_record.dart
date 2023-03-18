@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:kroniker_flutter/backend/backend.dart';
 
 // Model class for user data
 class GameRecord {
@@ -66,15 +67,17 @@ class GameRecordService {
         );
   }
 
-  Stream<List<GameRecord>> streamGamesForUser(Map<String, dynamic> userDocData) {
-  List<String> myGameIds = List<String>.from(userDocData['myGames']);
-  return _gameRecordsRef
-      .where(FieldPath.documentId, whereIn: myGameIds)
-      .snapshots()
-      .map((querySnapshot) {
-    return querySnapshot.docs.map((doc) => GameRecord.fromDocument(doc)).toList();
-  });
-}
+  Stream<List<GameRecord>> streamGamesForUser(UserRecord userDocData) {
+    List<dynamic> myGameIds = userDocData.myGames!;
+    return _gameRecordsRef
+        .where(FieldPath.documentId, whereIn: myGameIds)
+        .snapshots()
+        .map((querySnapshot) {
+      return querySnapshot.docs
+          .map((doc) => GameRecord.fromDocument(doc))
+          .toList();
+    });
+  }
 
   // Function to create a new user document in Firestore
   Future<void> createGameRecord(String gameDocID, GameRecord gameRecord) async {

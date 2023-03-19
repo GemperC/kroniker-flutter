@@ -68,9 +68,12 @@ class GameRecordService {
   }
 
   Stream<List<GameRecord>> streamGamesForUser(UserRecord userDocData) {
-    List<dynamic> myGameIds = userDocData.myGames!;
+    if (userDocData.myGames.isEmpty) {
+      return Stream.fromIterable([]);
+      ;
+    }
     return _gameRecordsRef
-        .where(FieldPath.documentId, whereIn: myGameIds)
+        .where(FieldPath.documentId, whereIn: userDocData.myGames)
         .snapshots()
         .map((querySnapshot) {
       return querySnapshot.docs

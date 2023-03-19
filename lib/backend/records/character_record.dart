@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:kroniker_flutter/backend/backend.dart';
 
 // Model class for character data
 class CharacterRecord {
@@ -9,7 +10,7 @@ class CharacterRecord {
   final String? classType;
   final String id;
   final String key;
-  final List<DocumentReference>? players;
+  final List<dynamic>? players;
   final DocumentReference owner;
   final String? level;
   final String? imageUrl;
@@ -65,23 +66,32 @@ class CharacterRecordService {
 
   Stream<List<CharacterRecord>> streamCharacterCollection() {
     return _characterRecordsRef.snapshots().map(
-          (snapshot) =>
-              snapshot.docs.map((doc) => CharacterRecord.fromDocument(doc)).toList(),
+          (snapshot) => snapshot.docs
+              .map((doc) => CharacterRecord.fromDocument(doc))
+              .toList(),
         );
   }
 
-  Stream<List<CharacterRecord>> streamCharactersForUser(Map<String, dynamic> userDocData) {
-    List<String> myCharacterIds = List<String>.from(userDocData['myCharacters']);
+
+
+  Stream<List<CharacterRecord>> streamCharactersForUser(UserRecord userDoc) {
+    if (userDoc.myCharacters.isEmpty) {
+      return Stream.fromIterable([]);
+      
+    }
     return _characterRecordsRef
-        .where(FieldPath.documentId, whereIn: myCharacterIds)
+        .where(FieldPath.documentId, whereIn: userDoc.myCharacters)
         .snapshots()
         .map((querySnapshot) {
-          return querySnapshot.docs.map((doc) => CharacterRecord.fromDocument(doc)).toList();
-        });
+      return querySnapshot.docs
+          .map((doc) => CharacterRecord.fromDocument(doc))
+          .toList();
+    });
   }
 
   // Function to create a new character document in Firestore
-  Future<void> createCharacterRecord(String characterDocID, CharacterRecord characterRecord) async {
+  Future<void> createCharacterRecord(
+      String characterDocID, CharacterRecord characterRecord) async {
     await _characterRecordsRef.doc(characterDocID).set({
       'name': characterRecord.name,
       'description': characterRecord.description,

@@ -86,7 +86,8 @@ class _NewGamePageState extends State<NewGamePage> {
         final userDoc =
             FirebaseFirestore.instance.collection('users').doc(user.uid);
         userDoc.update({
-          'myGames': FieldValue.arrayUnion([gameDoc.id])
+          'myGames': FieldValue.arrayUnion(
+              [FirebaseFirestore.instance.collection('games').doc(gameDoc.id)])
         });
         Utils.showSnackBarWithColor("Game record created!", Colors.blue);
 

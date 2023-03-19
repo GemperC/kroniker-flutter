@@ -6,13 +6,15 @@ class UserRecord {
   final String name;
   final String email;
   final String uid;
-  final List<dynamic>? myGames;
+  List<dynamic> myGames;
+  List<dynamic> myCharacters;
 
   UserRecord({
     required this.name,
     required this.email,
     required this.uid,
-    this.myGames,
+    this.myGames = const [],
+    this.myCharacters = const [],
   });
 
   // Convert Firestore document to UserRecord object
@@ -23,6 +25,7 @@ class UserRecord {
       email: data['email'],
       uid: data['uid'],
       myGames: data['myGames'],
+      myCharacters: data['myCharacters'],
     );
   }
 }
@@ -52,6 +55,7 @@ class UserRecordService {
       'email': user.email,
       'uid': user.uid,
       'myGames': user.myGames,
+      'myCharacters': user.myCharacters,
     });
   }
 

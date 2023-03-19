@@ -1,14 +1,18 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:kroniker_flutter/backend/backend.dart';
 import 'package:kroniker_flutter/pages/home/joinGameDialog.dart';
 import 'package:kroniker_flutter/pages/new_game/new_game_page.dart';
 
 class FloatingMenuButton extends StatefulWidget {
-  const FloatingMenuButton({super.key});
+  const FloatingMenuButton({
+    super.key,
+  });
 
   @override
   State<FloatingMenuButton> createState() => _FloatingMenuButtonState();
@@ -158,8 +162,27 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton>
             foregroundColor: Colors.white,
             label: 'New Character',
             visible: true,
-            onTap: () {}),
+            onTap: () {
+              deleteAllFiles();
+            }),
       ],
     );
+  }
+
+  Future<void> deleteAllFiles() async {
+    final storage = FirebaseStorage.instance;
+    final storageRef = storage.ref();
+    try {
+      // Retrieve a list of all files in your storage bucket
+      final listResult = await storageRef.listAll();
+
+      // Delete each file in the list
+      for (final item in listResult.items) {
+        await item.delete();
+      }
+    } catch (e) {
+      print('Error deleting files: $e');
+      // TODO: show an error message to the user or handle the error in some other way
+    }
   }
 }

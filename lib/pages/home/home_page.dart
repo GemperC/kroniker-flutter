@@ -145,91 +145,91 @@ class _HomePageState extends State<HomePage> {
                 });
               },
             ),
-            _tabTextIconIndexSelected == 0
-                ? ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: gamesDocs.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 12, horizontal: 30),
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => GameMenuPage(
-                                        gameData: gamesDocs[index])));
-                          },
-                          child: Container(
-                            decoration:
-                                const BoxDecoration(color: Colors.transparent),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(12.0),
-                                  child: Image.network(
-                                    gamesDocs[index].imageUrl!,
-                                    height: 50.0,
-                                    width: 50.0,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Text("${gamesDocs[index].title}\nSession: 5"),
-                                Expanded(child: Container()),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  )
-                : ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: charactersDocs.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 12, horizontal: 30),
-                        child: InkWell(
-                          onTap: () {
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (context) => GameMenuPage(
-                            //             gameData: gamesDocs[index])));
-                          },
-                          child: Container(
-                            decoration:
-                                const BoxDecoration(color: Colors.transparent),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(12.0),
-                                  child: Image.network(
-                                    gamesDocs[index].imageUrl!,
-                                    height: 50.0,
-                                    width: 50.0,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Text("${charactersDocs[index].id}\nSession: 5"),
-                                Expanded(child: Container()),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  )
+            // _tabTextIconIndexSelected == 0
+            //     ? ListView.builder(
+            //         shrinkWrap: true,
+            //         itemCount: gamesDocs.length,
+            //         itemBuilder: (context, index) {
+            //           return Padding(
+            //             padding: const EdgeInsets.symmetric(
+            //                 vertical: 12, horizontal: 30),
+            //             child: InkWell(
+            //               onTap: () {
+            //                 Navigator.push(
+            //                     context,
+            //                     MaterialPageRoute(
+            //                         builder: (context) => GameMenuPage(
+            //                             gameData: gamesDocs[index])));
+            //               },
+            //               child: Container(
+            //                 decoration:
+            //                     const BoxDecoration(color: Colors.transparent),
+            //                 child: Row(
+            //                   mainAxisSize: MainAxisSize.max,
+            //                   children: [
+            //                     ClipRRect(
+            //                       borderRadius: BorderRadius.circular(12.0),
+            //                       child: Image.network(
+            //                         gamesDocs[index].imageUrl!,
+            //                         height: 50.0,
+            //                         width: 50.0,
+            //                         fit: BoxFit.cover,
+            //                       ),
+            //                     ),
+            //                     const SizedBox(
+            //                       width: 10,
+            //                     ),
+            //                     Text("${gamesDocs[index].title}\nSession: 5"),
+            //                     Expanded(child: Container()),
+            //                   ],
+            //                 ),
+            //               ),
+            //             ),
+            //           );
+            //         },
+            //       )
+            //     : ListView.builder(
+            //         shrinkWrap: true,
+            //         itemCount: charactersDocs.length,
+            //         itemBuilder: (context, index) {
+            //           return Padding(
+            //             padding: const EdgeInsets.symmetric(
+            //                 vertical: 12, horizontal: 30),
+            //             child: InkWell(
+            //               onTap: () {
+            //                 // Navigator.push(
+            //                 //     context,
+            //                 //     MaterialPageRoute(
+            //                 //         builder: (context) => GameMenuPage(
+            //                 //             gameData: gamesDocs[index])));
+            //               },
+            //               child: Container(
+            //                 decoration:
+            //                     const BoxDecoration(color: Colors.transparent),
+            //                 child: Row(
+            //                   mainAxisSize: MainAxisSize.max,
+            //                   children: [
+            //                     ClipRRect(
+            //                       borderRadius: BorderRadius.circular(12.0),
+            //                       child: Image.network(
+            //                         gamesDocs[index].imageUrl!,
+            //                         height: 50.0,
+            //                         width: 50.0,
+            //                         fit: BoxFit.cover,
+            //                       ),
+            //                     ),
+            //                     const SizedBox(
+            //                       width: 10,
+            //                     ),
+            //                     Text("${charactersDocs[index].id}\nSession: 5"),
+            //                     Expanded(child: Container()),
+            //                   ],
+            //                 ),
+            //               ),
+            //             ),
+            //           );
+            //         },
+            //       )
           ],
         ),
       ],

@@ -4,6 +4,7 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:kroniker_flutter/pages/home/joinGameDialog.dart';
 import 'package:kroniker_flutter/pages/new_game/new_game_page.dart';
 
 class FloatingMenuButton extends StatefulWidget {
@@ -129,7 +130,14 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton>
             foregroundColor: Colors.white,
             label: 'Join Game',
             visible: true,
-            onTap: () {}),
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return JoinGameDialog();
+                },
+              );
+            }),
         SpeedDialChild(
             child: !rmicons ? const Icon(FontAwesomeIcons.plus) : null,
             backgroundColor: Color.fromARGB(255, 60, 182, 68),

@@ -5,7 +5,7 @@ import 'package:kroniker_flutter/backend/backend.dart';
 // Model class for user data
 class GameRecord {
   final String title;
-  final String? description;
+  final String description;
   final String? system;
   final String id;
   final String key;
@@ -16,7 +16,7 @@ class GameRecord {
 
   GameRecord({
     required this.title,
-    this.description,
+    required this.description,
     this.system,
     required this.id,
     required this.key,

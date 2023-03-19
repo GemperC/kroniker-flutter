@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,6 +17,7 @@ import './new_game_model.dart';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 class NewGamePage extends StatefulWidget {
   const NewGamePage({super.key});
@@ -31,6 +33,7 @@ class _NewGamePageState extends State<NewGamePage> {
   late FirebaseStorage storage;
   late Reference storageReference;
   File? image;
+  bool uploadingGame = false;
 
   final _formKey = GlobalKey<FormState>();
   @override
@@ -110,8 +113,16 @@ class _NewGamePageState extends State<NewGamePage> {
   Future pickImage() async {
     final image = await ImagePicker().pickImage(source: ImageSource.gallery);
     final imageTemp = File(image!.path);
+
+    // Compress the image
+    final compressedImage = await FlutterImageCompress.compressAndGetFile(
+      imageTemp.path, // input file path
+      "${imageTemp.path}\compressed\banner.jpeg", // output file path
+      quality: 25, // compression quality (0-100)
+    );
+
     setState(() {
-      this.image = imageTemp;
+      this.image = compressedImage;
     });
   }
 
@@ -127,139 +138,218 @@ class _NewGamePageState extends State<NewGamePage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                TextFormField(
-                  controller: _model.titleController,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Please enter a title';
-                    }
-                    return null;
-                  },
-                  style: GoogleFonts.poppins(
-                    color: Color.fromARGB(255, 255, 255, 255),
-                  ),
-                  keyboardType: TextInputType.name,
-                  decoration: InputDecoration(
-                    fillColor: Color.fromARGB(255, 53, 53, 53),
-                    filled: true,
-                    labelText: "Title",
-                    labelStyle: GoogleFonts.poppins(
-                      color: Colors.grey,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    border: const OutlineInputBorder(
-                      borderSide: BorderSide.none,
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 16),
-                TextFormField(
-                  keyboardType: TextInputType.multiline,
-                  maxLength: null,
-                  maxLines: null,
-                  controller: _model.descriptionController,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Please enter a description';
-                    }
-                    return null;
-                  },
-                  style: GoogleFonts.poppins(
-                    color: Color.fromARGB(255, 255, 255, 255),
-                  ),
-                  decoration: InputDecoration(
-                    fillColor: Color.fromARGB(255, 53, 53, 53),
-                    filled: true,
-                    labelText: "Description",
-                    labelStyle: GoogleFonts.poppins(
-                      color: Colors.grey,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    border: const OutlineInputBorder(
-                      borderSide: BorderSide.none,
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 16),
-                TextFormField(
-                  controller: _model.systemController,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Please enter a system';
-                    }
-                    return null;
-                  },
-                  style: GoogleFonts.poppins(
-                    color: Color.fromARGB(255, 255, 255, 255),
-                  ),
-                  keyboardType: TextInputType.name,
-                  decoration: InputDecoration(
-                    fillColor: Color.fromARGB(255, 53, 53, 53),
-                    filled: true,
-                    labelText: "System",
-                    labelStyle: GoogleFonts.poppins(
-                      color: Colors.grey,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    border: const OutlineInputBorder(
-                      borderSide: BorderSide.none,
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    pickImage();
-                  },
-                  child: Container(
-                      height: 48,
-                      width: 130,
-                      child: Center(
-                        child: Text(
-                          "Upload a Banner",
-                          style: GoogleFonts.poppins(
-                            color: Color.fromARGB(255, 255, 255, 255),
+      child: Container(
+        child: Stack(
+          children: [
+            Scaffold(
+              body: SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        controller: _model.titleController,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter a title';
+                          }
+                          return null;
+                        },
+                        style: GoogleFonts.poppins(
+                          color: Color.fromARGB(255, 255, 255, 255),
+                        ),
+                        keyboardType: TextInputType.name,
+                        decoration: InputDecoration(
+                          fillColor: Color.fromARGB(255, 53, 53, 53),
+                          filled: true,
+                          labelText: "Title",
+                          labelStyle: GoogleFonts.poppins(
+                            color: Colors.grey,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          border: const OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
                           ),
                         ),
-                      )),
+                      ),
+                      SizedBox(height: 16),
+                      TextFormField(
+                        keyboardType: TextInputType.multiline,
+                        maxLength: null,
+                        maxLines: null,
+                        controller: _model.descriptionController,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter a description';
+                          }
+                          return null;
+                        },
+                        style: GoogleFonts.poppins(
+                          color: Color.fromARGB(255, 255, 255, 255),
+                        ),
+                        decoration: InputDecoration(
+                          fillColor: Color.fromARGB(255, 53, 53, 53),
+                          filled: true,
+                          labelText: "Description",
+                          labelStyle: GoogleFonts.poppins(
+                            color: Colors.grey,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          border: const OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 16),
+                      TextFormField(
+                        controller: _model.systemController,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter a system';
+                          }
+                          return null;
+                        },
+                        style: GoogleFonts.poppins(
+                          color: Color.fromARGB(255, 255, 255, 255),
+                        ),
+                        keyboardType: TextInputType.name,
+                        decoration: InputDecoration(
+                          fillColor: Color.fromARGB(255, 53, 53, 53),
+                          filled: true,
+                          labelText: "System",
+                          labelStyle: GoogleFonts.poppins(
+                            color: Colors.grey,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          border: const OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: () {
+                          pickImage();
+                        },
+                        child: Container(
+                            height: 48,
+                            width: 130,
+                            child: Center(
+                              child: Text(
+                                "Upload a Banner",
+                                style: GoogleFonts.poppins(
+                                  color: Color.fromARGB(255, 255, 255, 255),
+                                ),
+                              ),
+                            )),
+                      ),
+                      SizedBox(height: 16),
+                      image != null
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(12.0),
+                              child: Image.file(image!))
+                          : Container(),
+                    ],
+                  ),
                 ),
-                SizedBox(height: 16),
-                image != null ? Image.file(image!) : Container(),
-              ],
-            ),
-          ),
-        ),
-        floatingActionButton: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 30),
-              child: FloatingActionButton(
-                child: Icon(Icons.close),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
+              ),
+              floatingActionButton: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 30),
+                    child: FloatingActionButton(
+                      child: Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                  FloatingActionButton(
+                    child: Icon(Icons.check),
+                    onPressed: () {
+                      setState(() {
+                        uploadingGame = true;
+                      });
+                      showDialog(
+                        barrierColor: null,
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (context) {
+                          return WillPopScope(
+                            onWillPop: () async => false,
+                            child: AlertDialog(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              title: Center(
+                                  child: Text(
+                                'Creating Game',
+                                style: TextStyle(fontSize: 24),
+                              )),
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'Wait, it may take a\nfew seconds',
+                                    style: TextStyle(fontSize: 20),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  SizedBox(height: 40),
+                                  Container(
+                                    height: 85,
+                                    // child: LoadingIndicator(
+                                    //     indicatorType: Indicator
+                                    //         .lineSpinFadeLoader,
+
+                                    //     /// Required, The loading type of the widget
+                                    //     colors: const [Colors.purple],
+
+                                    //     /// Optional, The color collections
+                                    //     strokeWidth: 2,
+
+                                    //     /// Optional, The stroke of the line, only applicable to widget which contains line
+                                    //     backgroundColor:
+                                    //         Colors.transparent,
+
+                                    //     /// Optional, Background of the widget
+                                    //     pathBackgroundColor:
+                                    //         Colors.transparent
+
+                                    //     /// Optional, the stroke backgroundColor
+                                    //     ),
+                                  ),
+                                  SizedBox(height: 40),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      );
+
+                      _submitForm();
+                    },
+                  ),
+                ],
               ),
             ),
-            FloatingActionButton(
-              child: Icon(Icons.check),
-              onPressed: () {
-                _submitForm();
-              },
-            ),
+            uploadingGame
+                ? Container(
+                    decoration: BoxDecoration(
+                      color: Color.fromARGB(124, 0, 0, 0),
+                    ),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                      child: SizedBox.expand(),
+                    ))
+                : Container()
           ],
         ),
       ),

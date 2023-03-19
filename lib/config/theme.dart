@@ -20,7 +20,9 @@ final ThemeData appThemeData = ThemeData(
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(backgroundColor: Colors.amber),
-    ));
+    ),
+    bottomSheetTheme:
+        BottomSheetThemeData(backgroundColor: Colors.transparent));
 
 final ThemeData darkAppThemeData = ThemeData(
   brightness: Brightness.dark,

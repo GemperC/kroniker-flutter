@@ -5,7 +5,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:kroniker_flutter/backend/records/game_record.dart';
+import 'package:kroniker_flutter/config/theme.dart';
 import 'package:kroniker_flutter/index.dart';
 import 'package:kroniker_flutter/utils/page_model.dart';
 import 'package:kroniker_flutter/utils/utils.dart';
@@ -130,72 +133,134 @@ class _NewGamePageState extends State<NewGamePage> {
           child: Form(
             key: _formKey,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 TextFormField(
                   controller: _model.titleController,
-                  decoration: const InputDecoration(labelText: 'Title'),
                   validator: (value) {
                     if (value!.isEmpty) {
                       return 'Please enter a title';
                     }
                     return null;
                   },
-                  onSaved: (value) =>
-                      setState(() => _model.titleController!.text = value!),
+                  style: GoogleFonts.poppins(
+                    color: Color.fromARGB(255, 255, 255, 255),
+                  ),
+                  keyboardType: TextInputType.name,
+                  decoration: InputDecoration(
+                    fillColor: Color.fromARGB(255, 53, 53, 53),
+                    filled: true,
+                    labelText: "Title",
+                    labelStyle: GoogleFonts.poppins(
+                      color: Colors.grey,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    border: const OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    ),
+                  ),
                 ),
+                SizedBox(height: 16),
                 TextFormField(
+                  keyboardType: TextInputType.multiline,
+                  maxLength: null,
+                  maxLines: null,
                   controller: _model.descriptionController,
-                  decoration: const InputDecoration(labelText: 'Description'),
                   validator: (value) {
                     if (value!.isEmpty) {
                       return 'Please enter a description';
                     }
                     return null;
                   },
+                  style: GoogleFonts.poppins(
+                    color: Color.fromARGB(255, 255, 255, 255),
+                  ),
+                  decoration: InputDecoration(
+                    fillColor: Color.fromARGB(255, 53, 53, 53),
+                    filled: true,
+                    labelText: "Description",
+                    labelStyle: GoogleFonts.poppins(
+                      color: Colors.grey,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    border: const OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    ),
+                  ),
                 ),
+                SizedBox(height: 16),
                 TextFormField(
                   controller: _model.systemController,
-                  decoration: const InputDecoration(labelText: 'System'),
                   validator: (value) {
                     if (value!.isEmpty) {
                       return 'Please enter a system';
                     }
                     return null;
                   },
+                  style: GoogleFonts.poppins(
+                    color: Color.fromARGB(255, 255, 255, 255),
+                  ),
+                  keyboardType: TextInputType.name,
+                  decoration: InputDecoration(
+                    fillColor: Color.fromARGB(255, 53, 53, 53),
+                    filled: true,
+                    labelText: "System",
+                    labelStyle: GoogleFonts.poppins(
+                      color: Colors.grey,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    border: const OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    ),
+                  ),
                 ),
-                TextFormField(
-                  controller: _model.sessionNumberController,
-                  decoration:
-                      const InputDecoration(labelText: 'Session Number'),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Please enter a system';
-                    }
-                    return null;
-                  },
-                ),
-                ElevatedButton.icon(
+                SizedBox(height: 16),
+                ElevatedButton(
                   onPressed: () {
                     pickImage();
                   },
-                  icon: Icon(Icons.camera),
-                  label: Text("Pick Image"),
+                  child: Container(
+                      height: 48,
+                      width: 130,
+                      child: Center(
+                        child: Text(
+                          "Upload a Banner",
+                          style: GoogleFonts.poppins(
+                            color: Color.fromARGB(255, 255, 255, 255),
+                          ),
+                        ),
+                      )),
                 ),
-                ElevatedButton.icon(
-                  onPressed: () {},
-                  icon: Icon(Icons.camera),
-                  label: Text("upload Image"),
-                ),
+                SizedBox(height: 16),
                 image != null ? Image.file(image!) : Container(),
               ],
             ),
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            _submitForm();
-          },
+        floatingActionButton: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 30),
+              child: FloatingActionButton(
+                child: Icon(Icons.close),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ),
+            FloatingActionButton(
+              child: Icon(Icons.check),
+              onPressed: () {
+                _submitForm();
+              },
+            ),
+          ],
         ),
       ),
     );

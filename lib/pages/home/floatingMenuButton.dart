@@ -7,6 +7,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:kroniker_flutter/backend/backend.dart';
 import 'package:kroniker_flutter/pages/home/joinGameDialog.dart';
+import 'package:kroniker_flutter/pages/new_character/new__character_page.dart';
 import 'package:kroniker_flutter/pages/new_game/new_game_page.dart';
 
 class FloatingMenuButton extends StatefulWidget {
@@ -164,6 +165,12 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton>
             visible: true,
             onTap: () {
               deleteAllFiles();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => NewCharacterPage(),
+                ),
+              ).then((_) => setState(() {}));
             }),
       ],
     );

@@ -9,8 +9,6 @@ class CharacterRecord {
   final String? race;
   final String? classType;
   final String id;
-  final String key;
-  final List<dynamic>? players;
   final DocumentReference owner;
   final String? level;
   final String? imageUrl;
@@ -21,8 +19,6 @@ class CharacterRecord {
     this.race,
     this.classType,
     required this.id,
-    required this.key,
-    this.players,
     required this.owner,
     this.level,
     this.imageUrl,
@@ -37,8 +33,6 @@ class CharacterRecord {
       race: data['race'],
       classType: data['classType'],
       id: data['id'],
-      key: data['key'],
-      players: List<DocumentReference>.from(data['players']),
       owner: data['owner'],
       level: data['level'],
       imageUrl: data['imageUrl'],
@@ -72,12 +66,9 @@ class CharacterRecordService {
         );
   }
 
-
-
   Stream<List<CharacterRecord>> streamCharactersForUser(UserRecord userDoc) {
     if (userDoc.myCharacters.isEmpty) {
       return Stream.fromIterable([]);
-      
     }
     return _characterRecordsRef
         .where(FieldPath.documentId, whereIn: userDoc.myCharacters)
@@ -98,8 +89,6 @@ class CharacterRecordService {
       'race': characterRecord.race,
       'classType': characterRecord.classType,
       'id': characterDocID,
-      'key': characterRecord.key,
-      'players': characterRecord.players,
       'owner': characterRecord.owner,
       'level': characterRecord.level,
       'imageUrl': characterRecord.imageUrl,

@@ -34,7 +34,7 @@ class _NewGamePageState extends State<NewGamePage> {
   late Reference storageReference;
   File? image;
   bool uploadingGame = false;
-
+  String _selectedSystem = "";
   final _formKey = GlobalKey<FormState>();
   @override
   void initState() {
@@ -69,6 +69,17 @@ class _NewGamePageState extends State<NewGamePage> {
 
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        uploadingGame = true;
+      });
+      showDialog(
+        barrierColor: null,
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return waitDialog();
+        },
+      );
       final gameRecord = GameRecord(
         title: _model.titleController!.text,
         description: _model.descriptionController!.text,
@@ -161,8 +172,6 @@ class _NewGamePageState extends State<NewGamePage> {
                         ),
                         keyboardType: TextInputType.name,
                         decoration: InputDecoration(
-                          fillColor: Color.fromARGB(255, 53, 53, 53),
-                          filled: true,
                           labelText: "Title",
                           labelStyle: GoogleFonts.poppins(
                             color: Colors.grey,
@@ -170,8 +179,8 @@ class _NewGamePageState extends State<NewGamePage> {
                             fontWeight: FontWeight.w400,
                           ),
                           border: const OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            borderSide: BorderSide(
+                                width: 3, color: Colors.blue), //<-- SEE HERE
                           ),
                         ),
                       ),
@@ -191,8 +200,6 @@ class _NewGamePageState extends State<NewGamePage> {
                           color: Color.fromARGB(255, 255, 255, 255),
                         ),
                         decoration: InputDecoration(
-                          fillColor: Color.fromARGB(255, 53, 53, 53),
-                          filled: true,
                           labelText: "Description",
                           labelStyle: GoogleFonts.poppins(
                             color: Colors.grey,
@@ -200,8 +207,8 @@ class _NewGamePageState extends State<NewGamePage> {
                             fontWeight: FontWeight.w400,
                           ),
                           border: const OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            borderSide: BorderSide(
+                                width: 3, color: Colors.blue), //<-- SEE HERE
                           ),
                         ),
                       ),
@@ -219,8 +226,6 @@ class _NewGamePageState extends State<NewGamePage> {
                         ),
                         keyboardType: TextInputType.name,
                         decoration: InputDecoration(
-                          fillColor: Color.fromARGB(255, 53, 53, 53),
-                          filled: true,
                           labelText: "System",
                           labelStyle: GoogleFonts.poppins(
                             color: Colors.grey,
@@ -228,8 +233,8 @@ class _NewGamePageState extends State<NewGamePage> {
                             fontWeight: FontWeight.w400,
                           ),
                           border: const OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            borderSide: BorderSide(
+                                width: 3, color: Colors.blue), //<-- SEE HERE
                           ),
                         ),
                       ),
@@ -275,65 +280,6 @@ class _NewGamePageState extends State<NewGamePage> {
                   FloatingActionButton(
                     child: Icon(Icons.check),
                     onPressed: () {
-                      setState(() {
-                        uploadingGame = true;
-                      });
-                      showDialog(
-                        barrierColor: null,
-                        barrierDismissible: false,
-                        context: context,
-                        builder: (context) {
-                          return WillPopScope(
-                            onWillPop: () async => false,
-                            child: AlertDialog(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                              title: Center(
-                                  child: Text(
-                                'Creating Game',
-                                style: TextStyle(fontSize: 24),
-                              )),
-                              content: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    'Wait, it may take a\nfew seconds',
-                                    style: TextStyle(fontSize: 20),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  SizedBox(height: 40),
-                                  Container(
-                                    height: 85,
-                                    // child: LoadingIndicator(
-                                    //     indicatorType: Indicator
-                                    //         .lineSpinFadeLoader,
-
-                                    //     /// Required, The loading type of the widget
-                                    //     colors: const [Colors.purple],
-
-                                    //     /// Optional, The color collections
-                                    //     strokeWidth: 2,
-
-                                    //     /// Optional, The stroke of the line, only applicable to widget which contains line
-                                    //     backgroundColor:
-                                    //         Colors.transparent,
-
-                                    //     /// Optional, Background of the widget
-                                    //     pathBackgroundColor:
-                                    //         Colors.transparent
-
-                                    //     /// Optional, the stroke backgroundColor
-                                    //     ),
-                                  ),
-                                  SizedBox(height: 40),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      );
-
                       _submitForm();
                     },
                   ),
@@ -350,6 +296,57 @@ class _NewGamePageState extends State<NewGamePage> {
                       child: SizedBox.expand(),
                     ))
                 : Container()
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget waitDialog() {
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30),
+        ),
+        title: Center(
+            child: Text(
+          'Creating Game',
+          style: TextStyle(fontSize: 24),
+        )),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Wait, it may take a\nfew seconds',
+              style: TextStyle(fontSize: 20),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 40),
+            Container(
+              height: 85,
+              // child: LoadingIndicator(
+              //     indicatorType: Indicator
+              //         .lineSpinFadeLoader,
+
+              //     /// Required, The loading type of the widget
+              //     colors: const [Colors.purple],
+
+              //     /// Optional, The color collections
+              //     strokeWidth: 2,
+
+              //     /// Optional, The stroke of the line, only applicable to widget which contains line
+              //     backgroundColor:
+              //         Colors.transparent,
+
+              //     /// Optional, Background of the widget
+              //     pathBackgroundColor:
+              //         Colors.transparent
+
+              //     /// Optional, the stroke backgroundColor
+              //     ),
+            ),
+            SizedBox(height: 40),
           ],
         ),
       ),
